@@ -22,6 +22,6 @@ router.put('/update/:id', verify, verifyAdmin, flightController.updateFlight);
 // Delete a flight (Admin only)
 router.delete('/delete/:id', verify, verifyAdmin, flightController.deleteFlight);
 
-router.post('/search', verify, flightController.searchFlight);
+router.post('/search', flightController.searchFlight);
 
 module.exports = router;
