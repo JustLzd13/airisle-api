@@ -116,3 +116,29 @@ module.exports.getAllFlights = async (req, res) => {
         res.status(500).json({ message: "Internal Server Error", error: error.message });
     }
 };
+
+//[CONTROLLER] Search flights by date and location
+module.exports.searchFlight = async (req, res) => {
+    try {
+        const { dateOfFlight, from, to } = req.body;
+
+        if (!dateOfFlight || !from || !to) {
+            return res.status(400).json({ message: "dateOfFlight, from, and to fields are required." });
+        }
+
+        const flights = await Flight.find({
+            dateOfFlight: dateOfFlight,
+            from: from,
+            to: to
+        });
+
+        if (flights.length === 0) {
+            return res.status(404).json({ message: "No flights found matching the criteria" });
+        }
+
+        res.status(200).json(flights);
+    } catch (error) {
+        console.error("Error searching flights:", error);
+        res.status(500).json({ message: "Internal Server Error", error: error.message });
+    }
+};
