@@ -11,7 +11,7 @@ module.exports.createPayment = async (req, res) => {
         const { userId, bookingId, totalAmount, paymentMethod, paymentStatus } = req.body;
 
         // Validate required fields
-        if (!totalAmount || !paymentMethod) {
+        if (!paymentMethod) {
             return res.status(400).json({ message: "All fields are required." });
         }
 
