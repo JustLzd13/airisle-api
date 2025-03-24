@@ -1,5 +1,6 @@
 //[SECTION] Dependencies and Modules
-const Booking = require('../models/Booking.js');
+const Booking = require("../models/Booking");
+const Flight = require("../models/Flight");
 const { errorHandler } = require("../auth.js");
 const mongoose = require("mongoose");
 
@@ -90,6 +91,8 @@ module.exports.getUserBookingById = async (req, res) => {
     }
 };
 
+
+
 module.exports.processPayment = async (req, res) => {
   try {
     const { bookingId, flightId, paymentMethod, amount } = req.body;
@@ -102,7 +105,6 @@ module.exports.processPayment = async (req, res) => {
 
     // Find the booking
     const booking = await Booking.findOne({ _id: bookingId, flightId, userId });
-
     if (!booking) {
       return res.status(404).json({ message: "Booking not found or does not belong to the user." });
     }
@@ -117,7 +119,25 @@ module.exports.processPayment = async (req, res) => {
       return res.status(400).json({ message: "Payment amount does not match the booking total price." });
     }
 
-    // Mock payment processing (Here you can integrate a real payment gateway like Stripe, PayPal, etc.)
+    // Find the flight
+    const flight = await Flight.findById(flightId);
+    if (!flight) {
+      return res.status(404).json({ message: "Flight not found." });
+    }
+
+    // Count passengers in the booking
+    const passengerCount = booking.passengers.length;
+
+    // Check if enough seats are available
+    if (flight.availableSeats < passengerCount) {
+      return res.status(400).json({ message: "Not enough available seats on this flight." });
+    }
+
+    // Deduct booked seats from available seats
+    flight.availableSeats -= passengerCount;
+    await flight.save();
+
+    // Process payment (Mock - Replace with real payment integration)
     console.log(`Processing payment of $${amount} via ${paymentMethod} for booking ${bookingId}`);
 
     // Update booking status to "Confirmed"
@@ -125,9 +145,14 @@ module.exports.processPayment = async (req, res) => {
     booking.paymentStatus = "Paid"; // Assuming a paymentStatus field exists
     await booking.save();
 
-    res.status(200).json({ message: "Payment successful. Booking confirmed.", booking });
+    res.status(200).json({
+      message: "Payment successful. Booking confirmed.",
+      booking,
+      updatedFlight: { flightId: flight._id, availableSeats: flight.availableSeats }
+    });
   } catch (error) {
     console.error("Error processing payment:", error);
     res.status(500).json({ message: "Internal Server Error", error: error.message });
   }
 };
+
