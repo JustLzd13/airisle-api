@@ -22,7 +22,7 @@ module.exports.createBooking = async (req, res) => {
             totalPrice
         });
 
-        const savedBooking = await newBooking.save();
+        const savedBooking = await newBooking.save().populate("flightId");
         res.status(201).json({ message: "Booking created successfully", booking: savedBooking });
     } catch (error) {
         errorHandler(error, res);
@@ -32,7 +32,7 @@ module.exports.createBooking = async (req, res) => {
 // [GET] All Bookings (Admin)
 module.exports.getAllBookings = async (req, res) => {
     try {
-        const bookings = await Booking.find().populate("flightId");
+        const bookings = await Booking.find();
         res.status(200).json(bookings);
     } catch (error) {
         errorHandler(error, res);
