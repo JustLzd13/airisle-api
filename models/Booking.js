@@ -4,10 +4,10 @@ const BookingSchema = new mongoose.Schema({
     userId: {
         type: String,
         required: [true, 'userId is Required']
-    },
-    flightId: {
-        type: String,
-        required: [true, 'userId is Required']
+    }, 
+    flightId: { 
+        type: mongoose.Schema.Types.ObjectId, 
+        ref: "Flight", required: true 
     },
     passengers:[
         {

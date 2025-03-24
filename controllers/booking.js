@@ -22,8 +22,9 @@ module.exports.createBooking = async (req, res) => {
             totalPrice
         });
 
-        const savedBooking = await newBooking.save().populate("flightId");
-        res.status(201).json({ message: "Booking created successfully", booking: savedBooking });
+        const savedBooking = await newBooking.save();
+        const populatedBooking = await Booking.findById(savedBooking._id).populate("flightId");
+        res.status(201).json({ message: "Booking created successfully", booking: populatedBooking });
     } catch (error) {
         errorHandler(error, res);
     }
