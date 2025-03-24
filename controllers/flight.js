@@ -117,7 +117,7 @@ module.exports.getAllFlights = async (req, res) => {
     }
 };
 
-//[CONTROLLER] Search flights by date and location
+// [CONTROLLER] Search flights by date and location
 module.exports.searchFlight = async (req, res) => {
     try {
         const { dateOfFlight, from, to } = req.body;
@@ -128,12 +128,12 @@ module.exports.searchFlight = async (req, res) => {
 
         const flights = await Flight.find({
             dateOfFlight: dateOfFlight,
-            from: from,
-            to: to
+            from: { $regex: new RegExp(from, "i") }, // Case-insensitive and partial match
+            to: { $regex: new RegExp(to, "i") } // Case-insensitive and partial match
         });
 
         if (flights.length === 0) {
-            return res.status(404).json({ message: "No flights found matching the criteria" });
+            return res.status(404).json({ message: "No flights found matching the criteria." });
         }
 
         res.status(200).json(flights);
@@ -142,3 +142,4 @@ module.exports.searchFlight = async (req, res) => {
         res.status(500).json({ message: "Internal Server Error", error: error.message });
     }
 };
+
