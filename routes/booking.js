@@ -10,6 +10,9 @@ const router = express.Router();
 // Create a booking (User)
 router.post('/create', verify, bookingController.createBooking);
 
+// Process a payment for a booking (User) ✅ NEW
+router.post("/process-payment", verify, bookingController.processPayment);
+
 // Get all bookings (Admin only)
 router.get('/all', verify, verifyAdmin, bookingController.getAllBookings);
 
