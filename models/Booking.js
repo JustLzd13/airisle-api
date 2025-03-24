@@ -52,13 +52,13 @@ const BookingSchema = new mongoose.Schema({
     },
     bookingStatus: {
         type: String,
-        enum: ['Pending', 'Unpaid'],
+        enum: ['Confirmed', 'Pending', 'Failed'],
         default: 'Pending'
     }
     ,
     paymentStatus: {
         type: String,
-        enum: ['Paid', 'Pending', 'Cancelled'],
+        enum: ['Paid', 'Pending', 'Unpaid'],
         default: 'Pending'
     }
 });

@@ -20,7 +20,7 @@ const PaymentSchema = new mongoose.Schema({
     },
     paymentStatus: {
         type: String,
-        enum: ['Pending', 'Failed', 'Success'],
+        enum: ['Paid', 'Unpaid'],
         required: true
     },
     paymentDate: {
