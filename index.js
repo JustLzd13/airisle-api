@@ -21,7 +21,7 @@ app.use(express.json());
 
 
 const corsOptions = {
-    origin: ['http://localhost:8000','http://localhost:3000', 'http://localhost:4000'], 
+    origin: ['http://localhost:8000','http://localhost:3000', 'http://localhost:4000', 'https://airline-frontend-sideproject529-lozada.vercel.app'], 
     credentials: true, 
     optionsSuccessStatus: 200 
 };
